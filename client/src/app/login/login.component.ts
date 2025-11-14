@@ -1,24 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-login',
   standalone: true,
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
-  imports: [CommonModule, FormsModule, RouterModule]
+  imports: [CommonModule, FormsModule]
 })
-export class LoginComponent implements OnInit {
-  loading: boolean = false;
-  username: string = '';
-  password: string = '';
+export class LoginComponent {
+  loading = false;
+  username = '';
+  password = '';
 
   constructor(private router: Router) {}
-
-  ngOnInit(): void {}
 
   onSubmit() {
     this.loading = true;
@@ -28,10 +25,10 @@ export class LoginComponent implements OnInit {
 
       if (this.username && this.password) {
         alert('Login successful!');
-        this.router.navigateByUrl('/home'); 
+        this.router.navigateByUrl('/home');
       } else {
         alert('Please enter username and password');
       }
-    }, 1000); 
+    }, 1000);
   }
 }

@@ -1,17 +1,38 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
+import { DialogModule } from 'primeng/dialog';
+import { TableModule } from 'primeng/table';
+import { ButtonModule } from 'primeng/button';
+import { FormsModule } from '@angular/forms';
+import { InputTextModule } from 'primeng/inputtext';
 
 @Component({
   selector: 'app-home',
   standalone: true,
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
-  imports: [CommonModule]
+  imports: [
+    CommonModule,
+    DialogModule,
+    TableModule,
+    ButtonModule,
+    FormsModule,
+    InputTextModule
+  ]
 })
-export class homeComponent implements OnInit {
+export class HomeComponent implements OnInit {
   users: any[] = [];
   loading = false;
+
+  displayEditDialog = false;
+
+  editUserData: any = {
+    id: null,
+    name: '',
+    email: '',
+    password: ''
+  };
 
   constructor(private http: HttpClient) {}
 
@@ -45,7 +66,7 @@ export class homeComponent implements OnInit {
       res => {
         if (res.status === 200) {
           alert('User deleted successfully');
-          this.fetchUsers(); 
+          this.fetchUsers();
         } else {
           alert(res.reason);
         }
@@ -57,33 +78,34 @@ export class homeComponent implements OnInit {
     );
   }
 
- editUser(user: any) {
-  const newName = prompt('Enter new name:', user.name);
-  const newEmail = prompt('Enter new email:', user.email);
-  const newPassword = prompt('Enter new password:', user.password);
+  openEditDialog(user: any) {
+    this.editUserData = { ...user };
+    this.displayEditDialog = true;
+  }
 
-  if (!newName || !newEmail || !newPassword) return;
+  saveEdit() {
+    const updateData = {
+      name: this.editUserData.name,
+      email: this.editUserData.email,
+      password: this.editUserData.password
+    };
 
-  const updateData = {
-    name: newName,
-    email: newEmail,
-    password: newPassword
-  };
-
-  this.http.put<any>(`http://localhost:3001/api/updateUser/${user.id}`, updateData).subscribe(
-    res => {
-      if (res.status === 200) {
-        alert('User updated successfully');
-        this.fetchUsers(); 
-      } else {
-        alert(res.reason);
-      }
-    },
-    err => {
-      console.error('Error updating user', err);
-      alert('Error updating user');
-    }
-  );
-}
-
+    this.http
+      .put<any>(`http://localhost:3001/api/updateUser/${this.editUserData.id}`, updateData)
+      .subscribe(
+        res => {
+          if (res.status === 200) {
+            alert('User updated successfully');
+            this.displayEditDialog = false;
+            this.fetchUsers();
+          } else {
+            alert(res.reason);
+          }
+        },
+        err => {
+          alert('Error updating user');
+          console.error(err);
+        }
+      );
+  }
 }
