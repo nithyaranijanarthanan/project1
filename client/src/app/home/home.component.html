@@ -1,93 +1,45 @@
 <div class="home-container">
-  <h2>Users List</h2>
 
-  <p-table 
-    [value]="users"
-    [loading]="loading"
-    class="p-datatable-striped p-datatable-gridlines">
-
-    <ng-template pTemplate="header">
-      <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Status</th>
-        <th style="width: 180px">Actions</th>
-      </tr>
-    </ng-template>
-
-    <ng-template pTemplate="body" let-user>
-      <tr>
-        <td>{{ user.id }}</td>
-        <td>{{ user.name }}</td>
-        <td>{{ user.email }}</td>
-        <td>{{ user.status === 1 ? 'Active' : 'Inactive' }}</td>
-        <td>
-          <button 
-            pButton 
-            label="Edit"
-            icon="pi pi-pencil"
-            class="p-button-sm p-button-rounded p-button-info me-2"
-            (click)="openEditDialog(user)">
-          </button>
-
-          <button 
-            pButton 
-            label="Delete"
-            icon="pi pi-trash"
-            class="p-button-sm p-button-rounded p-button-danger"
-            (click)="deleteUser(user.id)">
-          </button>
-        </td>
-      </tr>
-    </ng-template>
-
-  </p-table>
-
-  <div *ngIf="!loading && users.length === 0">
-    No users found.
+  <!-- Welcome Section -->
+  <div class="welcome-card">
+    <h2>Welcome, {{ user?.name || 'User' }}!</h2>
+    <p>Here’s an overview of your app dashboard.</p>
   </div>
+
+  <!-- Stats Cards -->
+  <div class="stats-cards">
+    <div class="card total-users">
+      <div class="card-icon"><i class="fas fa-users"></i></div>
+      <div class="card-content">
+        <h3>Total Users</h3>
+        <p>{{ totalUsers }}</p>
+      </div>
+    </div>
+
+    <div class="card active-users">
+      <div class="card-icon"><i class="fas fa-user-check"></i></div>
+      <div class="card-content">
+        <h3>Active Users</h3>
+        <p>{{ activeUsers }}</p>
+      </div>
+    </div>
+
+    <div class="card inactive-users">
+      <div class="card-icon"><i class="fas fa-user-times"></i></div>
+      <div class="card-content">
+        <h3>Inactive Users</h3>
+        <p>{{ inactiveUsers }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Links -->
+  <div class="quick-links">
+    <h3>Quick Actions</h3>
+    <ul>
+      <li><a routerLink="/dashboard/users"><i class="fas fa-list"></i> View User List</a></li>
+      <li><a routerLink="/dashboard/home"><i class="fas fa-home"></i> Dashboard Home</a></li>
+    </ul>
+  </div>
+
 </div>
-
-
-
-<p-dialog 
-  header="Edit User" 
-  [(visible)]="displayEditDialog" 
-  [modal]="true" 
-  [style]="{width: '400px'}">
-
-  <div class="p-fluid">
-    <div class="field">
-      <label>Name</label>
-      <input pInputText [(ngModel)]="editUserData.name" />
-    </div>
-
-    <div class="field">
-      <label>Email</label>
-      <input pInputText [(ngModel)]="editUserData.email" />
-    </div>
-
-    <div class="field">
-      <label>Password</label>
-      <input pInputText type="password" [(ngModel)]="editUserData.password" />
-    </div>
-  </div>
-
-  <ng-template pTemplate="footer">
-    <button 
-      pButton 
-      label="Cancel" 
-      class="p-button-text"
-      (click)="displayEditDialog=false">
-    </button>
-
-    <button 
-      pButton 
-      label="Save" 
-      icon="pi pi-check"
-      (click)="saveEdit()">
-    </button>
-  </ng-template>
-
-</p-dialog>

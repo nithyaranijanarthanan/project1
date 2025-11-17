@@ -3,6 +3,54 @@ import { Op } from "sequelize";
 
 const users = db.users;
 
+
+export const loginUser = async (req, res) => {
+  const { username, password } = req.body;
+
+  if (!username || !password) {
+    return res.status(400).json({
+      status: 400,
+      reason: "username and password are required",
+    });
+  }
+
+  const t = await db.sequelize.transaction();
+
+  try {
+    const user = await users.findOne({
+      where: {
+       name: username,
+        password,
+        status: { [Op.in]: [0, 1] }, 
+      },
+      transaction: t,
+    });
+
+    await t.commit();
+
+    if (user) {
+      const userData = user.get({ plain: true });
+      return res.status(200).json({
+        status: 200,
+        reason: "Login successful",
+        results: user.get({plain: true}),
+      });
+    } else {
+      return res.status(404).json({
+        status: 404,
+        reason: "User not found or invalid credentials",
+      });
+    }
+  } catch (err) {
+    await t.rollback();
+    console.error("Login error:", err);
+    return res.status(500).json({
+      status: 500,
+      reason: "Server error during login",
+    });
+  }
+};
+
 export const getAllUsers = async (req, res) => {
   console.log("Inside getAllUsers");
 
