@@ -3,6 +3,7 @@ import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faHome, faUsers } from '@fortawesome/free-solid-svg-icons';
+import { AuthService } from '../services/auth.service'; 
 
 @Component({
   selector: 'app-dashboard',
@@ -14,10 +15,10 @@ import { faHome, faUsers } from '@fortawesome/free-solid-svg-icons';
 export class DashboardComponent {
   faHome = faHome;
   faUsers = faUsers;
-  constructor(private router: Router) {}
+  constructor(private router: Router , private authService: AuthService) {}
 
   logout() {
-    localStorage.removeItem('user');
+   this.authService.logout();
     this.router.navigateByUrl('/login');
   }
 }

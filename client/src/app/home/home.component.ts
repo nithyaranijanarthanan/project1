@@ -7,7 +7,7 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  user: any;
+  user: any=null;
   totalUsers = 0;
   activeUsers = 0;
   inactiveUsers = 0;

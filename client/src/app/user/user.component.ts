@@ -8,7 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 
 @Component({
-  selector: 'app-home',
+  selector: 'app-user',
   standalone: true,
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.css'],
@@ -22,12 +22,18 @@ import { InputTextModule } from 'primeng/inputtext';
   ]
 })
 export class UserComponent implements OnInit {
+
   users: any[] = [];
   loading = false;
 
-  displayEditDialog = false;
+  // One dialog for add + edit
+  displayUserDialog = false;
 
-  editUserData: any = {
+  // Track mode
+  isEditMode = false;
+
+  // Form data
+  userFormData = {
     id: null,
     name: '',
     email: '',
@@ -40,8 +46,12 @@ export class UserComponent implements OnInit {
     this.fetchUsers();
   }
 
+  // ===============================
+  // GET ALL USERS
+  // ===============================
   fetchUsers() {
     this.loading = true;
+
     this.http.get<any>('http://localhost:3001/api/getAllUsers').subscribe(
       res => {
         this.loading = false;
@@ -51,14 +61,72 @@ export class UserComponent implements OnInit {
           alert(res.reason);
         }
       },
-      err => {
+      () => {
         this.loading = false;
         alert('Error fetching users');
-        console.error(err);
       }
     );
   }
 
+  // ===============================
+  // OPEN CREATE DIALOG
+  // ===============================
+  openCreateDialog() {
+    this.isEditMode = false;
+    this.userFormData = { id: null, name: '', email: '', password: '' };
+    this.displayUserDialog = true;
+  }
+
+  // ===============================
+  // OPEN EDIT DIALOG
+  // ===============================
+  openEditDialog(user: any) {
+    this.isEditMode = true;
+    this.userFormData = { ...user }; // clone
+    this.displayUserDialog = true;
+  }
+
+  // ===============================
+  // SAVE USER (CREATE + UPDATE)
+  // ===============================
+  saveUser() {
+    if (this.isEditMode) {
+      // UPDATE USER
+      this.http.put<any>(
+        `http://localhost:3001/api/updateUser/${this.userFormData.id}`,
+        this.userFormData
+      ).subscribe(
+        res => {
+          if (res.status === 200) {
+            alert('User updated successfully');
+            this.displayUserDialog = false;
+            this.fetchUsers();
+          } else {
+            alert(res.reason);
+          }
+        }
+      );
+
+    } else {
+      // CREATE USER
+      this.http.post<any>('http://localhost:3001/api/addUser', this.userFormData)
+        .subscribe(
+          res => {
+            if (res.status === 201) {
+              alert('User created successfully');
+              this.displayUserDialog = false;
+              this.fetchUsers();
+            } else {
+              alert(res.reason);
+            }
+          }
+        );
+    }
+  }
+
+  // ===============================
+  // DELETE USER
+  // ===============================
   deleteUser(id: number) {
     if (!confirm('Are you sure you want to delete this user?')) return;
 
@@ -71,41 +139,10 @@ export class UserComponent implements OnInit {
           alert(res.reason);
         }
       },
-      err => {
+      () => {
         alert('Error deleting user');
-        console.error(err);
       }
     );
   }
 
-  openEditDialog(user: any) {
-    this.editUserData = { ...user };
-    this.displayEditDialog = true;
-  }
-
-  saveEdit() {
-    const updateData = {
-      name: this.editUserData.name,
-      email: this.editUserData.email,
-      password: this.editUserData.password
-    };
-
-    this.http
-      .put<any>(`http://localhost:3001/api/updateUser/${this.editUserData.id}`, updateData)
-      .subscribe(
-        res => {
-          if (res.status === 200) {
-            alert('User updated successfully');
-            this.displayEditDialog = false;
-            this.fetchUsers();
-          } else {
-            alert(res.reason);
-          }
-        },
-        err => {
-          alert('Error updating user');
-          console.error(err);
-        }
-      );
-  }
 }
