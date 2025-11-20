@@ -4,7 +4,6 @@ export default (sequelize, DataTypes) => {
   return sequelize.define('users', {
     id: {
       type: DataTypes.INTEGER,
-      allowNull: false,
       primaryKey: true,
       autoIncrement: true
     },

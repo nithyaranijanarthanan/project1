@@ -1,19 +1,29 @@
-import {
-  getAllUsers,
-  addUser ,
-  updateUser,
-  deleteUser,
-  loginUser
-} from '../controller/users.controller.js';
+import express from "express";
+import multer from "multer";
+import { uploadFile, getAllUploads } from "../controllers/upload.controller.js";
+import { getAllUsers, addUser, updateUser, deleteUser, loginUser } from "../controllers/users.controller.js";
 
 export default function(app) {
- app.post("/api/login", loginUser);
+  const router = express.Router();
 
-  app.get('/api/getAllUsers', getAllUsers);
+  // ---------------- Multer setup ----------------
+  const storage = multer.diskStorage({
+    destination: (req, file, cb) => cb(null, "uploads/"),
+    filename: (req, file, cb) => cb(null, Date.now() + "-" + file.originalname)
+  });
+  const upload = multer({ storage });
 
-   app.post('/api/addUser', addUser);  
+  // ---------------- User APIs ----------------
+  router.post("/api/login", loginUser);
+  router.get("/api/getAllUsers", getAllUsers);
+  router.post("/api/addUser", addUser);
+  router.put("/api/updateUser/:id", updateUser);
+  router.delete("/api/deleteUser/:id", deleteUser);
 
-  app.put('/api/updateUser/:id', updateUser);
+  // ---------------- File Upload APIs ----------------
+  router.get("/upload", getAllUploads);                   // GET all uploads
+  router.post("/upload", upload.single("file"), uploadFile); // POST upload
 
-  app.delete('/api/deleteUser/:id', deleteUser);
+  // Mount all routes
+  app.use("/", router);
 }
