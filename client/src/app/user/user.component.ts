@@ -52,7 +52,7 @@ export class UserComponent implements OnInit {
   fetchUsers() {
     this.loading = true;
 
-    this.http.get<any>('http://localhost:3001/api/getAllUsers').subscribe(
+    this.http.get<any>('http://localhost:3000/api/users/getAllUsers').subscribe(
       res => {
         this.loading = false;
         if (res.status === 200) {
