@@ -37,7 +37,7 @@ export class LoginComponent {
 
     this.loading = true;
 
-    this.http.post<any>("http://localhost:3001/api/login", { username: this.username, password: this.password })
+    this.http.post<any>("http://localhost:3000/api/users/login", { username: this.username, password: this.password })
       .subscribe({
         next: (res) => {
           this.loading = false;

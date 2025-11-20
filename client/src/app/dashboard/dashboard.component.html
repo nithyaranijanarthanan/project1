@@ -34,7 +34,7 @@
               <span style="font-weight: 500;">Upload File</span>
   </div>
   <div style="padding-left: 40px; margin-top: 8px;">
-           <p-fileupload #fu mode="basic" chooseLabel="Choose" chooseIcon="pi pi-upload" name="file" url="http://localhost:3001/upload" accept="image/*" maxFileSize="1000000" (onUpload)="onUpload($event)"(onError)="onUploadError($event)" />
+           <p-fileupload #fu mode="basic" chooseLabel="Choose" chooseIcon="pi pi-upload" name="file" url="http://localhost:3000/api/uploads" accept="image/*" maxFileSize="1000000" (onUpload)="onUpload($event)"(onError)="onUploadError($event)" />
 <p-button label="Upload" (click)="fu.upload()" class="p-button-secondary" [style]="{'margin-top': '8px'}"></p-button>
             
 </div>
