@@ -6,72 +6,52 @@
     <button (click)="logout()">Logout</button>
   </div>
 
-  <!-- Sidebar + Main Content -->
+  <!-- Layout: Sidebar + Main Content -->
   <div class="content-wrapper">
 
     <!-- Sidebar -->
     <div class="sidebar">
       <ul>
-
         <!-- HOME -->
         <li>
           <a routerLink="/dashboard/home" routerLinkActive="active">
-            <div style="padding: 10px;">
-              <fa-icon [icon]="faHome" style="margin-right: 8px;"></fa-icon>
-              <span>Home</span>
-            </div>
+            <fa-icon [icon]="faHome"></fa-icon>
+            <span>Home</span>
           </a>
         </li>
-
 
         <!-- COMPANY MENU -->
         <li class="has-submenu">
-           <a routerLink="/dashboard/company" routerLinkActive="active">
-          <div style="padding: 10px;">
-            <fa-icon [icon]="faUsers" style="margin-right: 8px;"></fa-icon>
+          <div class="menu-title" (click)="companyMenuActive = !companyMenuActive" [class.active]="companyMenuActive">
+            <fa-icon [icon]="faUsers"></fa-icon>
             <span>Company</span>
+            <span class="arrow">{{ companyMenuActive ? '▲' : '▼' }}</span>
           </div>
-           </a>
-          <!-- SUBMENU -->
-          <ul class="submenu">
-
-            <!-- COMPANY LIST -->
+          <ul class="submenu" *ngIf="companyMenuActive">
             <li>
               <a routerLink="/dashboard/company-list" routerLinkActive="active">
-                <div style="padding: 10px 10px 10px 40px;">Company List</div>
+                <span>Company List</span>
               </a>
             </li>
-
-            <!-- USER LIST FOR SELECTED COMPANY -->
-            <!-- <li>
-              <a routerLink="/dashboard/company-users" routerLinkActive="active">
-                <div style="padding: 10px 10px 10px 40px;">Users of Company</div>
-              </a>
-            </li> -->
-
+        
           </ul>
         </li>
 
-
-        <!-- ALL USERS LIST -->
+        <!-- ALL USERS -->
         <li>
           <a routerLink="/dashboard/users" routerLinkActive="active">
-            <div style="padding: 10px;">
-              <fa-icon [icon]="faUsers" style="margin-right: 8px;"></fa-icon>
-              <span>User List</span>
-            </div>
+            <fa-icon [icon]="faUsers"></fa-icon>
+            <span>User List</span>
           </a>
         </li>
 
-
         <!-- FILE UPLOAD -->
-        <li>
-          <div style="padding: 10px;">
-            <fa-icon [icon]="faUpload" style="margin-right: 8px;"></fa-icon>
-            <span style="font-weight: 500;">Upload File</span>
+        <li style="margin: 20px; padding: 20px;">
+          <div class="menu-title">
+            <fa-icon [icon]="faUpload"></fa-icon>
+            <span>Upload File</span>
           </div>
-
-          <div style="padding-left: 40px; margin-top: 8px;">
+          <div class="submenu">
             <p-fileupload
               #fu mode="basic"
               chooseLabel="Choose"
@@ -83,19 +63,13 @@
               (onUpload)="onUpload($event)"
               (onError)="onUploadError($event)">
             </p-fileupload>
-
-            <p-button label="Upload" (click)="fu.upload()" 
-              class="p-button-secondary"
-              [style]="{'margin-top': '8px'}">
-            </p-button>
-
+            <p-button label="Upload" (click)="fu.upload()" class="p-button-secondary"></p-button>
           </div>
         </li>
-
       </ul>
     </div>
 
-    <!-- Main content -->
+    <!-- Main Content -->
     <div class="main-content">
       <router-outlet></router-outlet>
     </div>

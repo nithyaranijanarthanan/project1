@@ -26,21 +26,17 @@ export class DashboardComponent {
   faUsers = faUsers;
   faUpload = faUpload;
 
-  // 👇 Add this
+  // Controls company submenu
   companyMenuActive = false;
 
-  constructor(
-    private router: Router,
-    private authService: AuthService
-  ) {
-
-    // 👇 Detect active route for submenu highlight
+  constructor(private router: Router, private authService: AuthService) {
+    // Detect current route and auto-open submenu if needed
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         this.companyMenuActive =
-          this.router.url.includes('/dashboard/company') ||   // /company
-          this.router.url.includes('/dashboard/company-list') ||   // /company-list
-          this.router.url.includes('/dashboard/company-users');     // /company-users
+          this.router.url.includes('/dashboard/company') ||
+          this.router.url.includes('/dashboard/company-list') ||
+          this.router.url.includes('/dashboard/company-users');
       }
     });
   }
