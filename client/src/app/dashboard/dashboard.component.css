@@ -108,6 +108,16 @@
   border-top-left-radius: 12px;
 }
 
+.active-menu > .menu-title {
+  background: #1976d2;
+  color: white;
+}
+
+.submenu a.active {
+  color: #1976d2;
+  font-weight: bold;
+}
+
 /* Custom Scrollbar */
 .main-content::-webkit-scrollbar {
   width: 8px;

@@ -19,12 +19,12 @@ export class HomeComponent implements OnInit {
     this.user = JSON.parse(localStorage.getItem('user') || '{}');
 
     // Fetch users stats from API
-    this.http.get<any>('http://localhost:3001/api/getAllUsers').subscribe(
+    this.http.get<any>('http://localhost:3000/api/users/getAllUsers').subscribe(
       res => {
         if (res.status === 200) {
           this.totalUsers = res.results.length;
-          this.activeUsers = res.results.filter((u: any) => u.status === 1).length;
-          this.inactiveUsers = res.results.filter((u: any) => u.status === 0).length;
+          this.activeUsers = res.results.filter((u: any) => u.status === 0).length;
+          this.inactiveUsers = res.results.filter((u: any) => u.status === 1).length;
         }
       },
       err => console.error(err)
