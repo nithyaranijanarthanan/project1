@@ -1,10 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { StepperModule } from 'primeng/stepper';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  styleUrls: ['./home.component.css'],
+   imports: [
+  StepperModule,
+   ButtonModule 
+  ]
 })
 export class HomeComponent implements OnInit {
   user: any=null;
