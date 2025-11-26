@@ -3,6 +3,39 @@ import { Op } from "sequelize";
 
 const users = db.users;
 
+// =====================
+// PAGINATION CONTROLLER
+// =====================
+export const getUsersPaginated = async (req, res) => {
+  const page = parseInt(req.query.page) || 0;   // page number
+  const limit = parseInt(req.query.limit) || 10; // page size
+  const offset = page * limit;
+
+  try {
+    const { count, rows } = await users.findAndCountAll({
+      limit,
+      offset,
+      where: {
+        status: { [Op.in]: [0, 1] }
+      }
+    });
+
+    res.json({
+      status: 200,
+      results: rows,
+      total: count
+    });
+
+  } catch (error) {
+    console.error("Pagination error:", error);
+    res.status(500).json({
+      status: 500,
+      reason: "Database error",
+      error: error.message,
+    });
+  }
+};
+
 
 export const loginUser = async (req, res) => {
   const { username, password } = req.body;

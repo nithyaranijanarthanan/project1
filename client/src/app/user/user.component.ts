@@ -6,6 +6,7 @@ import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
+import { PaginatorModule } from 'primeng/paginator';
 
 @Component({
   selector: 'app-user',
@@ -18,13 +19,18 @@ import { InputTextModule } from 'primeng/inputtext';
     TableModule,
     ButtonModule,
     FormsModule,
-    InputTextModule
+    InputTextModule,
+    PaginatorModule
   ]
 })
 export class UserComponent implements OnInit {
 
   users: any[] = [];
   loading = false;
+
+   rows = 10;             // items per page
+totalRecords = 0;      // backend total count
+
 
   // One dialog for add + edit
   displayUserDialog = false;
@@ -40,32 +46,56 @@ export class UserComponent implements OnInit {
     password: ''
   };
 
+ 
+
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
-    this.fetchUsers();
+    this.loadUsers({ first: 0, rows: this.rows });
   }
 
   // ===============================
   // GET ALL USERS
   // ===============================
-  fetchUsers() {
+   loadUsers(event: any) {
     this.loading = true;
 
-    this.http.get<any>('http://localhost:3000/api/users/getAllUsers').subscribe(
+    const page = event.first / event.rows;
+    const limit = event.rows;
+
+    this.http.get<any>(
+      `http://localhost:3000/api/users/getUsers?page=${page}&limit=${limit}`
+    ).subscribe(
       res => {
+        this.users = res.results;
+        this.totalRecords = res.total;
         this.loading = false;
-        if (res.status === 200) {
-          this.users = res.results;
-        } else {
-          alert(res.reason);
-        }
       },
       () => {
         this.loading = false;
-        alert('Error fetching users');
+        console.error("Error loading users");
       }
     );
+  }
+  fetchUsers() {
+    this.loadUsers({ first: 0, rows: this.rows });
+    // this.loading = true;
+
+    // this.http.get<any>('http://localhost:3000/api/users/getAllUsers').subscribe(
+    //   res => {
+    //     this.loading = false;
+    //     if (res.status === 200) {
+    //       this.users = res.results;
+    //     } else {
+    //       alert(res.reason);
+    //     }
+    //   },
+    //   () => {
+    //     this.loading = false;
+    //     alert('Error fetching users');
+    //   }
+    // );
+    
   }
 
   // ===============================

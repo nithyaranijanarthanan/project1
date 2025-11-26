@@ -15,7 +15,13 @@
   <!-- USERS TABLE -->
   <p-table 
     [value]="users"
+    [lazy]="true"
+    (onLazyLoad)="loadUsers($event)"
+    [paginator]="true"
+    [rows]="rows"
+    [totalRecords]="totalRecords"
     [loading]="loading"
+    [rowsPerPageOptions]="[5,10,20,50]"
     class="p-datatable-striped p-datatable-gridlines">
 
     <ng-template pTemplate="header">

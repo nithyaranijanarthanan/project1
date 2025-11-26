@@ -3,13 +3,14 @@ import { HttpClient } from '@angular/common/http';
 import { StepperModule } from 'primeng/stepper';
 import { ButtonModule } from 'primeng/button';
 
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
    imports: [
   StepperModule,
-   ButtonModule 
+   ButtonModule,
   ]
 })
 export class HomeComponent implements OnInit {
